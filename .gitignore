@@ -1,0 +1,11 @@
+# ———————————————————  OS X Related
+.DS_Store
+
+
+# ——————————————————— XCode Related
+*.playground
+*.xcbkptlist
+*.xcuserstate
+xcuserdata/
+Localizable.strings
+build/
