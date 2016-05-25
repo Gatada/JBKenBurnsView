@@ -12,4 +12,7 @@ The JBKenBurnsView version 1.0 supports:
 5. The ability to fetch the currently shown image.
 6. Check if the animation is currently paused.
 
-The view also deals with device orientation changes. Maybe not in the best possible way, but it works for my needs..
+The view also deals with device orientation changes. If there is a better way to accomplish this then the current implementation, please let me know.
+
+Thanks,
+[@Johan](http://twitter.com/JohanHWB)
