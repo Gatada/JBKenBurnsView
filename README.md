@@ -15,4 +15,4 @@ The JBKenBurnsView version 1.0 supports:
 The view also deals with device orientation changes. If there is a better way to accomplish this then the current implementation, please let me know.
 
 Thanks,
-[@Johan](http://twitter.com/JohanHWB)
+[@JohanHWB](http://twitter.com/JohanHWB)
