@@ -17,22 +17,21 @@ class ViewController: UIViewController {
     @IBOutlet weak var pauseButton: UIButton!
     @IBOutlet weak var stopButton: UIButton!
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-        
+
+    
+    // MARK: - User Interaction
+    @IBAction func toggleAnimationTouchUpFrom(_ sender: Any) {
+    }
+    @IBAction func valueChangeOfSwitch(_ sender: UISwitch) {
+        UIView.setAnimationsEnabled(sender.isOn)
+        if !sender.isOn && kenBurnsView.isAnimating {
+            kenBurnsView.pauseAnimation()
+        } else if kenBurnsView.currentImage != nil && kenBurnsView.isPaused {
+            kenBurnsView.resumeAnimation()
+        }
     }
     
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
-    @IBAction func startButtonTouchUp(sender: UIButton) {
+    @IBAction func startTouchUpFrom(_ sender: UIButton) {
         let images = [
             UIImage(named: "ImageOne")!,
             UIImage(named: "ImageTwo")!,
@@ -42,7 +41,7 @@ class ViewController: UIViewController {
         kenBurnsView.animateWithImages(images, imageAnimationDuration: 10, initialDelay: 0, shouldLoop: true)
     }
 
-    @IBAction func startRandomButtonTouchUp(sender: UIButton) {
+    @IBAction func randomStartTouchUpFrom(_ sender: UIButton) {
         let images = [
             UIImage(named: "ImageOne")!,
             UIImage(named: "ImageTwo")!,
@@ -52,17 +51,17 @@ class ViewController: UIViewController {
         kenBurnsView.animateWithImages(images, imageAnimationDuration: 10, initialDelay: 0, shouldLoop: true, randomFirstImage: true)
     }
 
-    @IBAction func pauseButtonTouchUp(sender: UIButton) {
+    @IBAction func pauseTouchUpFrom(_ sender: UIButton) {
         if kenBurnsView.isPaused {
             kenBurnsView.resumeAnimation()
-            pauseButton.setTitle("Pause", forState: .Normal)
+            pauseButton.setTitle("Pause", for: .normal)
         } else {
             kenBurnsView.pauseAnimation()
-            pauseButton.setTitle("Resume", forState: .Normal)
+            pauseButton.setTitle("Resume", for: .normal)
         }
     }
 
-    @IBAction func stopButtonTouchUp(sender: UIButton) {
+    @IBAction func stopTouchUpFrom(_ sender: UIButton) {
         kenBurnsView.stopAnimation()
     }
 

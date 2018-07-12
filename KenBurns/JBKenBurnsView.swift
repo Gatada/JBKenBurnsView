@@ -1,6 +1,6 @@
 //
 //  JBKenBurnsView.swift
-//  Version 1.0
+//  Version 1.1
 //
 //  Created by Johan Basberg, on 16/05/2016.
 //  Based on the work by Javier Berlana et. al.
@@ -47,14 +47,26 @@ class JBKenBurnsView: UIView {
         }
     }
     
+    var isAnimating: Bool {
+        return imagesArray.count > 0 && !isPaused
+    }
+    
+    var currentImage: UIImage? {
+        if imagesArray.count >= (currentImageIndex + 1) {
+            return imagesArray[currentImageIndex]
+        } else {
+            return nil
+        }
+    }
+    
+
     // MARK: - Private Variables
     // Nothing would normally need to change below this line.
     // Most of these will be overriden in runtime.
     
     private var stopGeneratingDeviceOrientationNotifications = false
     private var portrait: Bool = true
-    private var nextImageDelay: dispatch_time_t = 0
-    private var showImageDuration: NSTimeInterval = 10
+    private var showImageDuration: TimeInterval = 10
     private var shouldLoop: Bool = true
     private var nextImageIndex: Int = 0
     private var indexOfFirstImageShown = 0
@@ -70,43 +82,52 @@ class JBKenBurnsView: UIView {
         case UpLeft
         case DownRight
         case UpRight
+        
+        static var random: KenBurnsImageMovementDirection {
+            return KenBurnsImageMovementDirection(rawValue:  Int(arc4random() % 4))!
+        }
     }
+    
+    private var randomBool: Bool {
+        return arc4random_uniform(1000) < 500
+    }
+
     
     // MARK: - View Life Cycle
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        backgroundColor = UIColor.clearColor()
+        backgroundColor = UIColor.clear
         layer.masksToBounds = true
         
         if screenOrientationAwareness {
-            if UIDevice.currentDevice().generatesDeviceOrientationNotifications == false {
-                UIDevice.currentDevice().beginGeneratingDeviceOrientationNotifications()
+            if UIDevice.current.isGeneratingDeviceOrientationNotifications == false {
+                UIDevice.current.beginGeneratingDeviceOrientationNotifications()
                 stopGeneratingDeviceOrientationNotifications = true
             }
-            NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(JBKenBurnsView.deviceOrientationDidChange), name: UIDeviceOrientationDidChangeNotification, object: nil)
-            portrait = UIDeviceOrientationIsPortrait(UIDevice.currentDevice().orientation)
+            NotificationCenter.default.addObserver(self, selector: #selector(JBKenBurnsView.deviceOrientationDidChange), name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
+            portrait = UIDeviceOrientationIsPortrait(UIDevice.current.orientation)
         }
     }
     
     deinit {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
         if stopGeneratingDeviceOrientationNotifications {
-            UIDevice.currentDevice().endGeneratingDeviceOrientationNotifications()
+            UIDevice.current.endGeneratingDeviceOrientationNotifications()
         }
     }
     
     // MARK: - Usage: Animation
     
-    /**
-     Start the Ken Burns effect by providing an array of images.
-     - parameter imagePaths: And array of valid paths to the images that will be animated with the Ken Burns effect.
-     - parameter imageAnimationDuration: The animation duration for each image, excluding the cross fading between images.
-     - parameter initialDelay: Pass a value higher than zero to delay the Ken Burns effect.
-     - parameter shouldLoop: A boolean determining if the image animation should start from the last provided image is shown.
-     - parameter randomFirstImage: Pass true if you want the initial image to be picked at random (default is false).
-     */
-    func animateWithImagePaths(imagePaths: [String], imageAnimationDuration duration: NSTimeInterval, initialDelay delay: NSTimeInterval, shouldLoop loop: Bool, randomFirstImage randomize: Bool = randomFirstImage) {
+    /// Start the Ken Burns effect by providing an array of image paths strings.
+    ///
+    /// - Parameters:
+    ///   - imagePaths: And array of valid paths to the images that will be animated with the Ken Burns effect.
+    ///   - duration: The animation duration for each image, excluding the cross fading between images.
+    ///   - delay: Pass a value higher than zero to delay the Ken Burns effect.
+    ///   - loop: A boolean determining if the image animation should start from the last provided image is shown.
+    ///   - randomize: Pass true if you want the initial image to be picked at random (default is false).
+    func animateWithImagePaths(_ imagePaths: [String], imageAnimationDuration duration: TimeInterval, initialDelay delay: TimeInterval, shouldLoop loop: Bool, randomFirstImage randomize: Bool = randomFirstImage) {
         
         for path in imagePaths {
             if let image = UIImage(contentsOfFile: path) {
@@ -123,29 +144,28 @@ class JBKenBurnsView: UIView {
     }
     
     
-    /**
-     Start the Ken Burns effect by providing an array of images.
-     - parameter images: And array of UIImages to be animated with the Ken Burns effect in the order of the array.
-     - parameter imageAnimationDuration: The animation duration for each image, excluding the cross fading between images.
-     - parameter initialDelay: Pass a value higher than zero to delay the Ken Burns effect.
-     - parameter shouldLoop: A boolean determining if the image animation should start from the last provided image is shown.
-     - parameter randomFirstImage: Pass true if you want the initial image to be picked at random (default is false).
-     */
-    func animateWithImages(images: [UIImage], imageAnimationDuration duration: NSTimeInterval, initialDelay delay: NSTimeInterval, shouldLoop loop: Bool, randomFirstImage randomize: Bool = randomFirstImage) {
+    /// Start the Ken Burns effect by providing an array of images.
+    ///
+    /// - Parameters:
+    ///   - images: And array of UIImages to be animated with the Ken Burns effect in the order of the array.
+    ///   - duration: The animation duration for each image, excluding the cross fading between images.
+    ///   - delay: Pass a value higher than zero to delay the Ken Burns effect.
+    ///   - loop: A boolean determining if the image animation should start from the last provided image is shown.
+    ///   - randomize: Pass true if you want the initial image to be picked at random (default is false).
+    func animateWithImages(_ images: [UIImage], imageAnimationDuration duration: TimeInterval, initialDelay delay: TimeInterval, shouldLoop loop: Bool, randomFirstImage randomize: Bool = randomFirstImage) {
         
         guard images.count > 0 else {
             assertionFailure("Cannot animate an empty image array.")
             return
         }
-        
+
         self.imagesArray = images
         startAnimationsWithDuration(duration, initialDelay: delay, shouldLoop: loop, randomFirstImage: randomize)
     }
     
-    /**
-     Call this to permanently stop the Ken Burns animation immediately; calling this in the middle of an animation doesn't look great. Consider calling ´pauseAnimation()´instead. The currently visible image will remain on screen.
-     - Discussion: As calling this permanently stops the animation, it also clears the array of images. The only way to start animating again is to call either ´animateWithImagePaths(:imageAnimationduration:initialDelay:shouldLoop)´ or ´animateWithImages(:imageAnimationduration:initialDelay:shouldLoop)´
-     */
+    /// Stop the Ken Burns animation immediately and resets translations. Visible image remains on screen.
+    /// To avoid the image from resetting call `pauseAnimation()` instead.
+    /// - Important: Calling this clears the image array.
     func stopAnimation() {
         layer.removeAllAnimations()
         if subviews.count > 0 {
@@ -154,24 +174,23 @@ class JBKenBurnsView: UIView {
         imagesArray = []
     }
     
-    /// Temporarily pauses the animation. Restart the animation by calling `resumeAnimationAfterDelay(initialDelay:)´.
+    /// Temporarily pauses the animation. Restart the animation by calling `resumeAnimationAfterDelay(initialDelay:)`.
     func pauseAnimation() {
         guard !isPaused else {
             return
         }
 
-        let pausedTime: CFTimeInterval = layer.convertTime(CACurrentMediaTime(), fromLayer: nil)
+        let pausedTime: CFTimeInterval = layer.convertTime(CACurrentMediaTime(), from: nil)
         layer.timeOffset = pausedTime
         layer.speed = 0
     }
     
-    /**
-     When the animation has been paused can you call this to resume the animation. If you want to delay the animation pass in an initialDelay greater than 0.
-     - Important: Calling this when the animation isn't actually paused will cause no visible changes.
-     - Parameter initialDelay: The number of seconds to delay the animation (default is 0).
-     */
-    func resumeAnimation(afterDelay delay: NSTimeInterval = 0) {
-        guard isPaused else {
+    /// When the animation has been paused can you call this to resume the animation.
+    /// If you want to delay the animation pass in an initialDelay greater than 0.
+    ///
+    /// - Parameter delay: Seconds to delay the animation, default is 0.
+    func resumeAnimation(afterDelay delay: TimeInterval = 0) {
+        guard isPaused, UIView.areAnimationsEnabled else {
             return
         }
 
@@ -180,30 +199,21 @@ class JBKenBurnsView: UIView {
         layer.timeOffset = 0
         layer.beginTime = 0
         
-        let timeSincePause: CFTimeInterval = layer.convertTime(CACurrentMediaTime(), fromLayer: nil) - pausedTime
+        let timeSincePause: CFTimeInterval = layer.convertTime(CACurrentMediaTime(), from: nil) - pausedTime
         layer.beginTime = timeSincePause        
     }
     
     
     //MARK: - Usage: Image Handling
     
-    
     func addImage(image: UIImage) {
         imagesArray.append(image)
-    }
-    
-    func currentImage() -> UIImage? {
-        if imagesArray.count >= (currentImageIndex + 1) {
-            return imagesArray[currentImageIndex] ?? nil
-        } else {
-            return nil
-        }
     }
     
     // MARK: - Utilities
     
     
-    private func startAnimationsWithDuration(duration: NSTimeInterval, initialDelay delay: NSTimeInterval, shouldLoop loop: Bool, randomFirstImage randomize: Bool) {
+    private func startAnimationsWithDuration(_ duration: TimeInterval, initialDelay delay: TimeInterval, shouldLoop loop: Bool, randomFirstImage randomize: Bool) {
         showImageDuration = duration
         shouldLoop = loop
 
@@ -213,18 +223,17 @@ class JBKenBurnsView: UIView {
         currentImageIndex = nextImageIndex
         nextImageIndex = ((nextImageIndex + 1) % imagesArray.count)
 
-        if let firstImage = currentImage() {
+        if let firstImage = currentImage {
             layer.speed = 1
             self.prepareAnimationsForImage(firstImage)
             self.startAnimationSequence()
         }
     }
     
-    func advanceImageIndex() -> Bool {
+    func didAdvanceToNextImageIndex() -> Bool {
         if !shouldLoop && nextImageIndex == indexOfFirstImageShown {
             // Next image is the first image, which means we are done
             kenBurnsDelegate?.finishedShowingLastImage()
-            stopAnimation()
             return false
         } else {
             currentImageIndex = nextImageIndex
@@ -233,23 +242,23 @@ class JBKenBurnsView: UIView {
         }
     }
     
-    func prepareAnimationsForImage(image: UIImage) {
+    func prepareAnimationsForImage(_ image: UIImage) {
         
-        var origin = CGPointZero
-        var move = CGPointZero
+        var origin = CGPoint.zero
+        var move = CGPoint.zero
         var zoomFactor: CGFloat
         
-        let resizeRatio = resizeRationFromImage(image)
+        let resizeRatio = resizeRationFromImage(image: image)
         let optimus = CGSize(width: image.size.width * resizeRatio * enlargeRatio, height: image.size.height * resizeRatio * enlargeRatio)
         
         let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: optimus.width, height: optimus.height))
-        imageView.backgroundColor = UIColor.blackColor()
+        imageView.backgroundColor = UIColor.black
         
         // Calculate maximum acceptable move
         let maxMoveX = optimus.width - bounds.size.width
         let maxMoveY = optimus.height - bounds.size.height
         
-        switch KenBurnsImageMovementDirection(rawValue:  Int(arc4random() % 4))! {
+        switch KenBurnsImageMovementDirection.random {
         case .UpLeft:
             zoomFactor = 1.25
             move.x   = -maxMoveX
@@ -279,9 +288,9 @@ class JBKenBurnsView: UIView {
         // Image Layer
         
         let imageLayer = CALayer()
-        imageLayer.contents = image.CGImage
-        imageLayer.anchorPoint = CGPointZero
-        imageLayer.bounds = CGRect(origin: CGPointZero, size: optimus)
+        imageLayer.contents = image.cgImage
+        imageLayer.anchorPoint = CGPoint.zero
+        imageLayer.bounds = CGRect(origin: CGPoint.zero, size: optimus)
         imageLayer.position = origin
         imageView.layer.addSublayer(imageLayer)
         
@@ -302,31 +311,31 @@ class JBKenBurnsView: UIView {
         // Transforms
         
         let rotationAngleRadians = CGFloat(arc4random() % 9) / 100
-        let rotation = CGAffineTransformMakeRotation(rotationAngleRadians)
+        let rotation = CGAffineTransform(rotationAngle: rotationAngleRadians)
         
-        let pan = CGAffineTransformMakeTranslation(move.x, move.y)
-        let panWithRotation = CGAffineTransformConcat(rotation, pan)
+        let pan = CGAffineTransform(translationX: move.x, y: move.y)
+        let panWithRotation = rotation.concatenating(pan)
         
-        let zoom = CGAffineTransformMakeScale(zoomFactor, zoomFactor)
-        let zoomedPanWithRotation = CGAffineTransformConcat(zoom, panWithRotation)
+        let zoom = CGAffineTransform(scaleX: zoomFactor, y: zoomFactor)
+        let zoomedPanWithRotation = zoom.concatenating(panWithRotation)
         
         var startTransform: CGAffineTransform
         
         switch zoomMode {
         case .Random:
-            if randomBool() {
+            if randomBool {
                 startTransform = zoomedPanWithRotation
-                finishTransform = CGAffineTransformIdentity
+                finishTransform = CGAffineTransform.identity
             } else {
                 fallthrough
             }
         case .In:
-            startTransform = CGAffineTransformIdentity
+            startTransform = CGAffineTransform.identity
             finishTransform = zoomedPanWithRotation
             
         case .Out:
             startTransform = zoomedPanWithRotation
-            finishTransform = CGAffineTransformIdentity
+            finishTransform = CGAffineTransform.identity
             
         }
         
@@ -337,7 +346,7 @@ class JBKenBurnsView: UIView {
     }
     
     func startAnimationSequence(withFade fade: Bool = true) {
-        guard isPaused == false else {
+        guard isPaused == false, UIView.areAnimationsEnabled else {
             return
         }
         
@@ -347,24 +356,23 @@ class JBKenBurnsView: UIView {
             let animation = CATransition()
             animation.duration = 1
             animation.type = kCATransitionFade
-            layer.addAnimation(animation, forKey: nil)
+            layer.add(animation, forKey: nil)
         }
         
         // Animation prepared transformations: zoom, pan and rotation
         
-        UIView.animateWithDuration(
-            showImageDuration,
-            delay: 0,
-            options: [.CurveEaseInOut, .BeginFromCurrentState],
-            animations: {
+        UIView.animate(withDuration: showImageDuration, delay: 0, options: [.curveEaseInOut, .beginFromCurrentState], animations: {
                 if let endState = self.finishTransform, let image = self.currentImageView {
                     image.transform = endState
                 }
-            }, completion: { completed in
-                if completed && self.advanceImageIndex() {
-                    if let nextImage = self.currentImage() {
+            }, completion: { finished in
+                if finished {
+                    if self.didAdvanceToNextImageIndex(), let nextImage = self.currentImage {
                         self.prepareAnimationsForImage(nextImage)
                         self.startAnimationSequence()
+                    } else {
+                        // Reached end of slideshow and looping is disabled
+                        self.stopAnimation()
                     }
                 }
             }
@@ -373,11 +381,11 @@ class JBKenBurnsView: UIView {
     
     //MARK: - Notification Responses
     
-    /// If ´screenOrientationAwareness´ is true, this notification response will relayout and present the next image whenever the screen orientation changes.
+    /// If `screenOrientationAwareness` is true, this notification response will re-layout the currently visible image whenever the screen orientation changes.
     internal func deviceOrientationDidChange() {
 
         var didActuallyChange = false
-        let newOrientation: UIDeviceOrientation = UIDevice.currentDevice().orientation
+        let newOrientation: UIDeviceOrientation = UIDevice.current.orientation
         
         if (UIDeviceOrientationIsPortrait(newOrientation) && !portrait) {
             portrait = true
@@ -387,17 +395,13 @@ class JBKenBurnsView: UIView {
             didActuallyChange = true
         }
         
-        if let visibleImage = currentImage() where didActuallyChange {
+        if let visibleImage = currentImage, didActuallyChange {
             prepareAnimationsForImage(visibleImage)
             startAnimationSequence(withFade: false)
         }
     }
     
     //MARK: - Private Utilities
-    
-    private func randomBool() -> Bool {
-        return arc4random_uniform(100) < 50
-    }
     
     /// Find the maximum ratio for the image given the bounds, used to calculate the maximum size of the image based on its ratio.
     private func resizeRationFromImage(image: UIImage) -> CGFloat {
