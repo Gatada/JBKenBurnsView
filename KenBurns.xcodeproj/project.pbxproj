@@ -74,9 +74,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4C3D7C131CEB154600EDFEE4 /* Build configuration list for PBXNativeTarget "KenBurns" */;
 			buildPhases = (
+				4CA9FAC320F8190B004819F5 /* Update Build Number */,
 				4C3D7BFD1CEB154600EDFEE4 /* Sources */,
 				4C3D7BFE1CEB154600EDFEE4 /* Frameworks */,
 				4C3D7BFF1CEB154600EDFEE4 /* Resources */,
+				4CA9FAC520F8195F004819F5 /* Restore Build Number to Static Text */,
 			);
 			buildRules = (
 			);
@@ -132,6 +134,37 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		4CA9FAC320F8190B004819F5 /* Update Build Number */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Update Build Number";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Set the build number to the count of Git commits\nbuildNumber=$(git log --oneline $(git describe --tags --abbrev=0).. | wc -l)\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"";
+		};
+		4CA9FAC520F8195F004819F5 /* Restore Build Number to Static Text */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Restore Build Number to Static Text";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Restore build number to a static and descriptive string\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion •••\\ AUTOMATED\\ IN\\ BUILD\\ PHASES\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		4C3D7BFD1CEB154600EDFEE4 /* Sources */ = {
@@ -257,6 +290,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = GitHub.KenBurns;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -268,6 +302,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = GitHub.KenBurns;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
