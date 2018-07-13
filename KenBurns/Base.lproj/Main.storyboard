@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -8,6 +8,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -15,10 +16,6 @@
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="KenBurns" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
-                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
-                    </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -107,27 +104,28 @@ As our initials are the same, the name of the JBKenBurnsView stays the same.</st
                             <constraint firstItem="VIb-gM-cIo" firstAttribute="top" secondItem="dWd-v5-isc" secondAttribute="bottom" constant="-2" id="2R0-ia-UAf"/>
                             <constraint firstItem="Obr-Fv-5Th" firstAttribute="centerY" secondItem="519-u2-m6d" secondAttribute="centerY" id="72d-eK-pyi"/>
                             <constraint firstItem="mbi-Gu-h3I" firstAttribute="trailing" secondItem="rMb-gN-P7d" secondAttribute="trailing" id="BGA-cV-5kI"/>
-                            <constraint firstAttribute="trailing" secondItem="rMb-gN-P7d" secondAttribute="trailing" id="Bum-WL-MFq"/>
+                            <constraint firstItem="AlK-O3-m5d" firstAttribute="trailing" secondItem="rMb-gN-P7d" secondAttribute="trailing" id="Bum-WL-MFq"/>
                             <constraint firstItem="dWd-v5-isc" firstAttribute="top" secondItem="rMb-gN-P7d" secondAttribute="bottom" constant="8" id="Hce-gf-zVB"/>
                             <constraint firstItem="rMb-gN-P7d" firstAttribute="bottom" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="-65" id="J9n-1H-My7"/>
-                            <constraint firstItem="rMb-gN-P7d" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="-20" id="Kw6-f8-fPX"/>
+                            <constraint firstItem="rMb-gN-P7d" firstAttribute="top" secondItem="AlK-O3-m5d" secondAttribute="top" constant="-20" id="Kw6-f8-fPX"/>
                             <constraint firstItem="dWd-v5-isc" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="LOB-PA-3Ly"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="OSu-4B-DGP" secondAttribute="bottom" constant="20" id="MeW-nU-Exm"/>
+                            <constraint firstItem="AlK-O3-m5d" firstAttribute="bottom" secondItem="OSu-4B-DGP" secondAttribute="bottom" constant="20" id="MeW-nU-Exm"/>
                             <constraint firstItem="Obr-Fv-5Th" firstAttribute="leading" secondItem="519-u2-m6d" secondAttribute="trailing" constant="8" id="OWf-D4-MKu"/>
                             <constraint firstItem="OSu-4B-DGP" firstAttribute="centerX" secondItem="VIb-gM-cIo" secondAttribute="centerX" id="Wt9-vx-TDw"/>
                             <constraint firstItem="VIb-gM-cIo" firstAttribute="top" secondItem="519-u2-m6d" secondAttribute="bottom" constant="24" id="bYy-go-9us"/>
-                            <constraint firstItem="VIb-gM-cIo" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" constant="-62" id="djK-Qp-tbU"/>
-                            <constraint firstItem="rMb-gN-P7d" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="fHx-vf-MHB"/>
-                            <constraint firstItem="YQ0-NM-M0W" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" constant="62" id="g6e-QA-PhA"/>
+                            <constraint firstItem="VIb-gM-cIo" firstAttribute="centerX" secondItem="AlK-O3-m5d" secondAttribute="centerX" constant="-62" id="djK-Qp-tbU"/>
+                            <constraint firstItem="rMb-gN-P7d" firstAttribute="leading" secondItem="AlK-O3-m5d" secondAttribute="leading" id="fHx-vf-MHB"/>
+                            <constraint firstItem="YQ0-NM-M0W" firstAttribute="centerX" secondItem="AlK-O3-m5d" secondAttribute="centerX" constant="62" id="g6e-QA-PhA"/>
                             <constraint firstItem="OSu-4B-DGP" firstAttribute="top" secondItem="VIb-gM-cIo" secondAttribute="bottom" constant="2" id="mI5-KF-OAF"/>
                             <constraint firstItem="dWd-v5-isc" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="mj5-gh-5of"/>
                             <constraint firstItem="mbi-Gu-h3I" firstAttribute="bottom" secondItem="rMb-gN-P7d" secondAttribute="bottom" id="rHg-l7-NTv"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="s2L-sd-8cQ" secondAttribute="bottom" constant="20" id="vaH-gD-fWG"/>
+                            <constraint firstItem="AlK-O3-m5d" firstAttribute="bottom" secondItem="s2L-sd-8cQ" secondAttribute="bottom" constant="20" id="vaH-gD-fWG"/>
                             <constraint firstItem="mbi-Gu-h3I" firstAttribute="leading" secondItem="rMb-gN-P7d" secondAttribute="leading" id="xIm-gZ-f2F"/>
                             <constraint firstItem="s2L-sd-8cQ" firstAttribute="centerX" secondItem="YQ0-NM-M0W" secondAttribute="centerX" id="y4U-dw-dmm"/>
                             <constraint firstItem="519-u2-m6d" firstAttribute="centerX" secondItem="dWd-v5-isc" secondAttribute="centerX" constant="-40" id="yoj-2W-fMV"/>
                             <constraint firstItem="s2L-sd-8cQ" firstAttribute="top" secondItem="YQ0-NM-M0W" secondAttribute="bottom" constant="2" id="zbo-Ap-T8a"/>
                         </constraints>
+                        <viewLayoutGuide key="safeArea" id="AlK-O3-m5d"/>
                     </view>
                     <connections>
                         <outlet property="kenBurnsView" destination="rMb-gN-P7d" id="mea-j9-not"/>
