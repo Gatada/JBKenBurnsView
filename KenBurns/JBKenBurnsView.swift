@@ -10,9 +10,9 @@
 import UIKit
 
 enum KenBurnsZoomMode: Int {
-    case In
-    case Out
-    case Random
+    case `in`
+    case out
+    case random
 }
 
 protocol JBKenBurnsViewDelegate {
@@ -24,7 +24,7 @@ class JBKenBurnsView: UIView {
     // MARK: - Customizable Defaults
     
     /// Change this to randomly zoom in or out, or lock it to one or the other.
-    var zoomMode: KenBurnsZoomMode = .Random
+    var zoomMode: KenBurnsZoomMode = .random
     
     /// How much the image should be zoomed. Default 1.1 appears to be a reasonable ration, without too much pixelation.
     private let enlargeRatio: CGFloat = 1.1
@@ -78,10 +78,10 @@ class JBKenBurnsView: UIView {
     private var currentImageIndex: Int = 0
     
     private enum KenBurnsImageMovementDirection: Int {
-        case DownLeft
-        case UpLeft
-        case DownRight
-        case UpRight
+        case downLeft
+        case upLeft
+        case downRight
+        case upRight
         
         static var random: KenBurnsImageMovementDirection {
             return KenBurnsImageMovementDirection(rawValue:  Int(arc4random() % 4))!
@@ -259,24 +259,24 @@ class JBKenBurnsView: UIView {
         let maxMoveY = optimus.height - bounds.size.height
         
         switch KenBurnsImageMovementDirection.random {
-        case .UpLeft:
+        case .upLeft:
             zoomFactor = 1.25
             move.x   = -maxMoveX
             move.y  = -maxMoveY
             
-        case .DownLeft:
+        case .downLeft:
             origin.y = bounds.size.height - optimus.height
             zoomFactor = 1.10
             move.x = -maxMoveX
             move.y = maxMoveY
             
-        case .UpRight:
+        case .upRight:
             origin.x = bounds.size.width - optimus.width
             zoomFactor = 1.30
             move.x = maxMoveX
             move.y = -maxMoveY
             
-        case .DownRight:
+        case .downRight:
             origin.x = bounds.size.width - optimus.width
             origin.y = bounds.size.height - optimus.height
             zoomFactor = 1.20
@@ -322,18 +322,18 @@ class JBKenBurnsView: UIView {
         var startTransform: CGAffineTransform
         
         switch zoomMode {
-        case .Random:
+        case .random:
             if randomBool {
                 startTransform = zoomedPanWithRotation
                 finishTransform = CGAffineTransform.identity
             } else {
                 fallthrough
             }
-        case .In:
+        case .`in`:
             startTransform = CGAffineTransform.identity
             finishTransform = zoomedPanWithRotation
             
-        case .Out:
+        case .out:
             startTransform = zoomedPanWithRotation
             finishTransform = CGAffineTransform.identity
             
