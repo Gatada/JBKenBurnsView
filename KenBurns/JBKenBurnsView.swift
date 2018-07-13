@@ -1,6 +1,6 @@
 //
 //  JBKenBurnsView.swift
-//  Version 1.1
+//  Version 1.2
 //
 //  Created by Johan Basberg, on 16/05/2016.
 //  Based on the work by Javier Berlana et. al.
