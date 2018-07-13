@@ -33,8 +33,8 @@
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="dWd-v5-isc">
-                                <rect key="frame" x="16" y="276.5" width="343" height="282.5"/>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dWd-v5-isc">
+                                <rect key="frame" x="16" y="277" width="343" height="215"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <string key="text">This Ken Burns view is written in Swift by Johan Basberg. It is based on the work by Javier Berlana (https://github.com/jberlana/JBKenBurns).
 
@@ -101,10 +101,10 @@ As our initials are the same, the name of the JBKenBurnsView stays the same.</st
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="VIb-gM-cIo" firstAttribute="top" secondItem="dWd-v5-isc" secondAttribute="bottom" constant="-2" id="2R0-ia-UAf"/>
                             <constraint firstItem="Obr-Fv-5Th" firstAttribute="centerY" secondItem="519-u2-m6d" secondAttribute="centerY" id="72d-eK-pyi"/>
                             <constraint firstItem="mbi-Gu-h3I" firstAttribute="trailing" secondItem="rMb-gN-P7d" secondAttribute="trailing" id="BGA-cV-5kI"/>
                             <constraint firstItem="AlK-O3-m5d" firstAttribute="trailing" secondItem="rMb-gN-P7d" secondAttribute="trailing" id="Bum-WL-MFq"/>
+                            <constraint firstItem="519-u2-m6d" firstAttribute="top" secondItem="dWd-v5-isc" secondAttribute="bottom" constant="20" id="E4x-mG-Hnx"/>
                             <constraint firstItem="dWd-v5-isc" firstAttribute="top" secondItem="rMb-gN-P7d" secondAttribute="bottom" constant="8" id="Hce-gf-zVB"/>
                             <constraint firstItem="rMb-gN-P7d" firstAttribute="bottom" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="-65" id="J9n-1H-My7"/>
                             <constraint firstItem="rMb-gN-P7d" firstAttribute="top" secondItem="AlK-O3-m5d" secondAttribute="top" constant="-20" id="Kw6-f8-fPX"/>
@@ -137,7 +137,7 @@ As our initials are the same, the name of the JBKenBurnsView stays the same.</st
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="284" y="442"/>
+            <point key="canvasLocation" x="284" y="441.22938530734638"/>
         </scene>
     </scenes>
 </document>
